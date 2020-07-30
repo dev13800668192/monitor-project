@@ -1,30 +1,23 @@
 <template>
   <div id="app">
-<<<<<<< HEAD
-
-=======
-    <img alt="Vue logo" src="./assets/logo.png" />
->>>>>>> 69d1166a58f5915abc868561381e2dd08f86ee23
-  </div>
+   <router-view></router-view>
+   </div>
 </template>
 
 <script>
-<<<<<<< HEAD
-
 
 export default {
-  name: 'App',
-  components: {
-  }
+  name: 'app',
 }
-</script>
-
-<style>
-
-=======
 
 </script>
 
 <style>
->>>>>>> 69d1166a58f5915abc868561381e2dd08f86ee23
+#app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
 </style>
