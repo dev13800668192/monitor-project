@@ -1,46 +1,26 @@
 <template>
   <div class="head-container clearfix">
     <div class="header-left">
-      <showAside :toggle-click="toggleClick"/>
-      <breadcrumb />
+      <showAside :toggle-click="toggleClick" />
+      <dropDownmenu />
+
     </div>
-    
+
     <div class="header-right">
       <div class="header-user-con">
+        <!-- button -->
+        <el-row style="margin: 10px;">
+          <el-button type="primary" round>实时数据</el-button>
+          <el-button type="primary" round>历史数据</el-button>
+        </el-row>
+
         <!-- 全屏显示 -->
-            <div class="btn-fullscreen" @click="handleFullScreen">
-              <el-tooltip effect="dark" :content="fullscreen?`取消全屏`:`全屏`" placement="bottom">
-                <i class="el-icon-rank"></i>
-              </el-tooltip>
-            </div>
-            <!-- 消息中心 -->
-            <!-- <div class="btn-bell">
-              <el-tooltip effect="dark" :content="message?`有${message}条未读消息`:`消息中心`" placement="bottom">
-                <router-link to="/tabs">
-                 <i class="el-icon-bell"></i>
-                 </router-link>
-              </el-tooltip>
-              <span class="btn-bell-badge" v-if="message"></span>
-            </div> -->
-            <!-- 用户名下拉菜单 -->
-            <el-dropdown class="avatar-container" trigger="click">
-              <div class="avatar-wrapper">
-                <img
-                  src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3266090804,66355162&fm=26&gp=0.jpg"
-                  class="user-avatar"
-                >
-                {{username }}<i class="el-icon-caret-bottom"/>
-              </div>
-              <el-dropdown-menu slot="dropdown" class="user-dropdown">
-                <router-link class="inlineBlock" to="/">
-                  <el-dropdown-item>首页</el-dropdown-item>
-                </router-link>
-                <el-dropdown-item>个人设置</el-dropdown-item>
-                <el-dropdown-item divided>
-                  <span style="display:block;" @click="logout">退出登陆</span>
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
+        <div class="btn-fullscreen" @click="handleFullScreen">
+          <el-tooltip effect="dark" :content="fullscreen?`取消全屏`:`全屏`" placement="bottom">
+            <i class="el-icon-rank"></i>
+          </el-tooltip>
+        </div>
+
       </div>
     </div>
   </div>
@@ -48,12 +28,12 @@
 
 <script>
   import showAside from "./showAside";
-  import breadcrumb from './Breadcrumb';
+  import dropDownmenu from "./Dropdownmenu.vue";
   export default {
     // name:'header',
     components: {
       showAside,
-      breadcrumb
+      dropDownmenu,
     },
     data() {
       return {
@@ -65,10 +45,10 @@
     },
     computed: {
       isCollapse: {
-        get: function() {
+        get: function () {
           return this.$store.state.isCollapse;
         },
-        set: function(newValue) {
+        set: function (newValue) {
           this.$store.commit("IS_COLLAPSE", newValue);
         }
       }
@@ -79,8 +59,8 @@
       },
       // 用户名下拉菜单选择事件
       logout(command) {
-        this.$store.commit('TAGES_LIST',[])
-        this.$store.commit('SET_BREAD',['home'])
+        this.$store.commit('TAGES_LIST', [])
+        this.$store.commit('SET_BREAD', ['home'])
         this.$router.push("/login");
       },
       // 全屏事件
@@ -111,8 +91,9 @@
         this.fullscreen = !this.fullscreen;
       }
     }
-  }; 
-  </script>
+  };
+
+</script>
 
 <style lang="scss" scoped>
   .head-container {
@@ -123,24 +104,28 @@
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 0 3px 0 rgba(0, 0, 0, 0.04);
     border-bottom: 1px solid #f0f0f0;
   }
+
   .header-left {
     float: left;
   }
+
   .header-right {
     float: right;
     padding-right: 50px;
   }
+
   .header-user-con {
     display: flex;
     height: 50px;
     align-items: center;
   }
+
   .btn-fullscreen {
     transform: rotate(45deg);
     margin-right: 5px;
     font-size: 24px;
   }
-  
+
   .btn-fullscreen {
     position: relative;
     width: 30px;
@@ -150,7 +135,8 @@
     cursor: pointer;
     margin-bottom: 10px;
   }
-  .btn-bell{
+
+  .btn-bell {
     position: relative;
     width: 30px;
     height: 30px;
@@ -161,6 +147,7 @@
     margin-right: 20px;
     margin-bottom: 15px;
   }
+
   .btn-bell-badge {
     position: absolute;
     right: 0;
@@ -170,31 +157,39 @@
     border-radius: 4px;
     background: #f56c6c;
   }
+
   .btn-bell .el-icon-bell {
     color: #666;
   }
+
   .user-name {
     margin-left: 10px;
   }
+
   .user-avator {
     margin-left: 20px;
   }
+
   .user-avator img {
     display: block;
     width: 40px;
     height: 40px;
     border-radius: 50%;
   }
+
   .el-dropdown-link {
     color: #fff;
     cursor: pointer;
   }
+
   .el-dropdown-menu__item {
     text-align: center;
   }
+
   .avatar-container {
     height: 50px;
     display: inline-block;
+
     // position: absolute;
     // right: 35px;
     .avatar-wrapper {
@@ -202,11 +197,13 @@
       margin-top: 5px;
       position: relative;
       line-height: initial;
+
       .user-avatar {
         width: 40px;
         height: 40px;
         border-radius: 10px;
       }
+
       .el-icon-caret-bottom {
         position: absolute;
         right: -20px;
@@ -215,4 +212,20 @@
       }
     }
   }
-  </style>
+
+  .el-dropdown-link {
+    cursor: pointer;
+    color: #409EFF;
+  }
+
+  .el-icon-arrow-down {
+    font-size: 12px;
+  }
+
+  .el-button--primary {
+    color: #FFF;
+    background-color: #047ee2;
+    border-color: #047ee2;
+  }
+
+</style>

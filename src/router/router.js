@@ -6,6 +6,7 @@ import 'nprogress/nprogress.css'
 Vue.use(Router)
 
 const getComponent = (name, component) => () => import(`@/views/${name}/${component}.vue`)
+const getComponentChild = (component) => () => import(`@/views/layout/components/${component}.vue`)
 
 const myRouter = new Router({
   routes: [
@@ -14,8 +15,11 @@ const myRouter = new Router({
       path: '/',
       component: getComponent('layout', 'Layout'),
       children: [{
+          path:'',
+          redirect:'/client'
+        }, {
           path: '/client',
-          component: getComponent('client', 'client'),
+          component: getComponentChild('Client'),
           name: 'client',
           meta: {
             title: '客户端性能监控'
@@ -23,7 +27,7 @@ const myRouter = new Router({
         },
         {
           path: '/serve',
-          component: getComponent('serve', 'serve'),
+          component: getComponentChild('Serve'),
           name: 'serve',
           meta: {
             title: '服务端性能监控'

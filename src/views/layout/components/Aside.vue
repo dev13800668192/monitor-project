@@ -1,8 +1,8 @@
 <template>
   <div class="aside">
     <el-scrollbar wrap-class="scrollbar-wrapper">
-      <el-menu :default-active="onRoutes" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"
-        :collapse="isCollapse" @select="select" active-text-color="#bdb7ff" router>
+      <el-menu :default-active="onRoutes" class="el-menu-vertical-demo" 
+        :collapse="isCollapse"  active-text-color="#bdb7ff" router>
         <template v-for="item in items">
           <template v-if="item.subs">
             <el-submenu :index="item.index" :key="item.index">
@@ -66,24 +66,6 @@
       ...mapState(["isCollapse"]), //从vuex里面获取菜单是否折叠
     },
     methods: {
-      //下拉展开
-      handleOpen(key, keyPath) {
-        console.log(key, keyPath);
-      },
-      //下来关闭
-      handleClose(key, keyPath) {
-        console.log(key, keyPath);
-      },
-      select(index, indexPath) {
-        console.log(index, indexPath);
-        if (indexPath.indexOf("home") > -1) return;
-        if (index !== null) {
-          let breadList = ["home"];
-          breadList.push(...indexPath);
-          console.log(breadList);
-          this.$store.commit("SET_BREAD", breadList);
-        }
-      }
 
     }
   };
