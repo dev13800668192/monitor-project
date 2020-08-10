@@ -15,20 +15,19 @@
     methods: {
       drawChart() {
         let myChart = echarts.init(this.$refs.linecharts);
-        var data = [];
+        const data = [];
         let option = {
           title: {
             text: '动态数据 + 时间坐标轴'
           },
           xAxis: {
             type: 'time',
-            data: [],
             splitLine: {
               show: false
             }
           },
           yAxis: {
-            type: 'category',
+            type: 'value',
             boundaryGap: [0, '100%'],
             splitLine: {
               show: false
@@ -52,7 +51,7 @@
               }]
             })
           })
-        }, 1000);
+        }, 5000);
         // 使用刚指定的配置项和数据显示图表。
         window.addEventListener("resize", function () {
           myChart.resize();

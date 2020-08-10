@@ -14,7 +14,8 @@ export default {
   methods: {
     drawChart () {
       let myChart = echarts.init(this.$refs.charts);
-      let time = []
+      let time = [];
+      let data =[];
       let option = {
         title: {
           text: "CPU近5分钟运行状态",
@@ -32,14 +33,14 @@ export default {
         },
         xAxis: {
           type: "category",
-          data: ["04-02", "04-03", "04-03", "04-04", "04-05", "04-06", "04-07"]
+          data: time
         },
         yAxis: {
           type: "value"
         },
         series: [
           {
-            data: [820, 932, 901, 934, 1290, 1330, 1320],
+            data: data,
             itemStyle: {
               normal: {
                 //折点颜色
@@ -54,6 +55,20 @@ export default {
           }
         ]
       };
+
+      setInterval(function () {
+          axios.get('http://10.0.2.148:8080/api/monitor/client/cacheData',).then(res=>{
+            time.push(res.data[0].updateTime);
+            data.push(res.data[0].cpu);
+            console.log(time);
+            console.log(data);
+            myChart.setOption({
+              series:[{
+                data:data
+              }]
+            })
+          })
+        }, 5000);
       // 使用刚指定的配置项和数据显示图表。
       myChart.setOption(option);
       window.addEventListener("resize", function () {
