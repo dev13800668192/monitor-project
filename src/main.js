@@ -22,3 +22,14 @@ new Vue({
     store,
     render: h => h(App)
 }).$mount('#app')
+
+
+// import {request} from './network/request';
+
+// request({
+//     url: '/client/cacheData'
+//   }, res => {
+//     this.$store.commit('InitCacheData',res.data)
+//   }, err => {
+//     console.log(err);
+//   })

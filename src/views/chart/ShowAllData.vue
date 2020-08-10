@@ -10,8 +10,12 @@
       </el-col>
 
       <!-- 趋势图 -->
-      <el-col :lg="17">
+      <el-col :lg="14">
         <linechart></linechart>
+      </el-col>
+
+      <el-col :lg="3">
+        <newline></newline>
       </el-col>
     </el-row>
   </div>
@@ -26,11 +30,14 @@ import dashboard from "./Dashboard"
 
 import linechart from "./Linechart"
 
+import newline from "./NewLine"
+
 export default {
   components: {
     countTo,
     dashboard,
-    linechart
+    linechart,
+    newline
   },
   data () {
     return {

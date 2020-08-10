@@ -4,6 +4,7 @@
 
 <script>
 import echarts from "echarts";
+
 export default {
   mounted () {
     this.SetEchart();
@@ -13,21 +14,22 @@ export default {
   },
   methods: {
     SetEchart () {
+      let cpu = this.$store.state.cacheData[this.$store.state.cacheData.length-1].cpu
       let myChart = echarts.init(this.$refs.dashboard);
       let option = {
         tooltip: {
           formatter: '{a} <br/>{b} : {c}%'
         },
         series: [{
-          name: '业务指标',
+          name: 'CPU',
           type: 'gauge',
           radius: "80%",
           detail: {
             formatter: '{value}%'
           },
           data: [{
-            value: 50,
-            name: '完成率'
+            value: cpu,
+            name: 'CPU占用率'
           }]
         }]
       };

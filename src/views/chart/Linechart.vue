@@ -14,20 +14,21 @@ export default {
   methods: {
     drawChart () {
       let myChart = echarts.init(this.$refs.charts);
+      let time = []
       let option = {
         title: {
-          text: "一周访问量",
+          text: "CPU近5分钟运行状态",
           x: "center",
           textStyle: {
             fontSize: 16
           }
         },
         legend: {
-          data: ["访问量"]
+          data: ["CPU占用率"]
         },
         tooltip: {
           trigger: "axis",
-          formatter: "{b}<br>访问量{c}"
+          formatter: "{b}<br>CPU占用率{c}"
         },
         xAxis: {
           type: "category",
