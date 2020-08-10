@@ -39,26 +39,20 @@
             type: 'line',
             showSymbol: false,
             hoverAnimation: false,
-            data: []
+            data: data
           }]
         };
 
         setInterval(function () {
-
-          axios.get('http://10.0.2.148:8080/api/monitor/client/cacheData').then(res => {
-            var updata = option.series[0].data;
-            let data = res.data
-            var x = [data.updateTime, data[0]];
-            updata.push({
-              name: x[0],
-              value: x
-            });
+          axios.get('http://10.0.2.148:8080/api/monitor/client/cacheData',).then(res=>{
+            data.push([new Date(res.data[0].updateTime),res.data[0].cpu]);
             myChart.setOption({
-              series: option.series
-            });
-
+              series:[{
+                data:data
+              }]
+            })
           })
-        }, 5000);
+        }, 1000);
         // 使用刚指定的配置项和数据显示图表。
         window.addEventListener("resize", function () {
           myChart.resize();
@@ -66,7 +60,8 @@
       },
       toDo(item, i) {
         this.$set(this.todulist[i], "checked", item.checked ? false : true);
-      }
+      },
+
     }
   }
 
