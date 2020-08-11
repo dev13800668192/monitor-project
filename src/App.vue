@@ -20,14 +20,10 @@
         }).then(res=>{
           let data = res.data;
           this.$store.commit('initCacheData',data);
-          console.log(this.$store.state.cacheData.size)
         })
     },
     methods: {
         
-
-
-
     },
   }
 

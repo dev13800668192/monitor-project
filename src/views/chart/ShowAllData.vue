@@ -1,23 +1,23 @@
 <template>
-  <div class="home">
-    <!-- 仪表盘 and 趋势图 -->
-    <el-row :gutter="20" type="flex" justify="center">
-      <!-- 仪表盘 -->
-      <el-col :lg="7">
-        <div class="main-center">
-          <dashboard></dashboard>
-        </div>
-      </el-col>
+  <div>
+    <div v-for="(param, index) in params" :key="index">
+      <div class="home">
+        <!-- 仪表盘 and 趋势图 -->
+        <el-row :gutter="20" type="flex" justify="center">
+          <!-- 仪表盘 -->
+          <el-col :lg="7">
+            <div class="main-center">
+              <dashboard v-bind:param="param"></dashboard>
+            </div>
+          </el-col>
 
-      <!-- 趋势图 -->
-      <el-col :lg="14">
-        <linechart></linechart>
-      </el-col>
-
-      <el-col :lg="3">
-        <newline></newline>
-      </el-col>
-    </el-row>
+          <!-- 趋势图 -->
+          <el-col :lg="17">
+            <linechart v-bind:param="param"></linechart>
+          </el-col>
+        </el-row>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -26,26 +26,42 @@ import countTo from "vue-count-to";
 //引入echarts 插件
 import echarts from "echarts";
 
-import dashboard from "./Dashboard"
+import dashboard from "./Dashboard";
 
-import linechart from "./Linechart"
+import linechart from "./Linechart";
 
-import newline from "./NewLine"
-
+import { request } from "../../network/request";
 export default {
   components: {
     countTo,
     dashboard,
     linechart,
-    newline
   },
-  data () {
+  data() {
     return {
-
+      store: this.$store,
+      params: ["cpu", "gpu", "memory", "fps", "hardDisk", "io"],
     };
-  }
-};
+  },
+  mounted() {
+    this.getcacheData(this.store);
 
+    // console.log(this)
+  },
+  methods: {
+    getcacheData(store) {
+      setInterval(function () {
+        request({
+          url: "/client/cacheData",
+          methods: "get",
+        }).then((res) => {
+          let datas = res.data;
+          store.commit("initCacheData", datas);
+        });
+      }, 5000);
+    },
+  },
+};
 </script>
 <style lang="scss" scoped>
 .home {

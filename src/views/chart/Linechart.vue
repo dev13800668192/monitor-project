@@ -4,39 +4,60 @@
 
 <script>
 import echarts from "echarts";
+import { request } from "../../network/request";
 export default {
-  mounted () {
-    this.drawChart();
+  props:{
+    param:String
   },
-  destroyed () {
-    window.onresize = null
+  data() {
+    return {
+      store:this.$store
+    }
+  },
+  mounted() {
+    this.drawChart(this.store,this.param);
+  },
+  destroyed() {
+    window.onresize = null;
   },
   methods: {
-    drawChart () {
+    drawChart(store,param) {
       let myChart = echarts.init(this.$refs.charts);
-      let time = [];
-      let data =[];
+      let time = [
+        this.$store.state.cacheData[this.$store.state.cacheData.length - 1]
+          .updateTime,
+      ];
+      let data = [
+        this.$store.state.cacheData[this.$store.state.cacheData.length - 1][param],
+      ];
       let option = {
         title: {
-          text: "CPU近5分钟运行状态",
+          text: param+"近5分钟运行状态",
           x: "center",
           textStyle: {
-            fontSize: 16
-          }
+            fontSize: 16,
+          },
         },
         legend: {
-          data: ["CPU占用率"]
+          data: [param+"占用率"],
         },
         tooltip: {
           trigger: "axis",
-          formatter: "{b}<br>CPU占用率{c}"
+          formatter: "{b}<br>"+param+"占用率 {c}% ",
         },
         xAxis: {
           type: "category",
-          data: time
+          data: time,
+          boundaryGap: false,
+          splitLine: {
+            show: true,
+          },
         },
         yAxis: {
-          type: "value"
+          type: "value",
+          splitLine: {
+            show: true,
+          },
         },
         series: [
           {
@@ -47,37 +68,46 @@ export default {
                 color: "#bdb7ff",
                 //折线颜色
                 lineStyle: {
-                  color: "#bdb7ff"
-                }
-              }
+                  color: "#bdb7ff",
+                },
+              },
             },
-            type: "line"
-          }
-        ]
+            type: "line",
+            areaStyle: {},
+          },
+        ],
       };
 
-      setInterval(function () {
-          axios.get('http://10.0.2.148:8080/api/monitor/client/cacheData',).then(res=>{
-            time.push(res.data[0].updateTime);
-            data.push(res.data[0].cpu);
-            console.log(time);
-            console.log(data);
-            myChart.setOption({
-              series:[{
-                data:data
-              }]
-            })
-          })
-        }, 5000);
-      // 使用刚指定的配置项和数据显示图表。
       myChart.setOption(option);
+
+      setInterval(function () {
+
+        time.push(store.state.cacheData[0].updateTime);
+        data.push(store.state.cacheData[0][param]);
+        if (time.length > 60) {
+          time.shift();
+          data.shift();
+        }
+        myChart.setOption({
+          xAxis: {
+            data: time,
+          },
+          series: [
+            {
+              type: "line",
+              data: data,
+            },
+          ],
+        });
+      }, 5000);
+
       window.addEventListener("resize", function () {
         myChart.resize();
       });
     },
-    toDo (item, i) {
+    toDo(item, i) {
       this.$set(this.todulist[i], "checked", item.checked ? false : true);
-    }
-  }
-}
+    },
+  },
+};
 </script>

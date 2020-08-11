@@ -1,5 +1,5 @@
 <template>
-  <div class="head-container clearfix">
+  <div class="head-container ">
     <div class="header-left">
       <showAside :toggle-click="toggleClick" />
       <dropDownmenu />
@@ -97,6 +97,7 @@
 
 <style lang="scss" scoped>
   .head-container {
+    z-index: 99;
     height: 50px;
     line-height: 50px;
     -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12),

@@ -2,7 +2,7 @@ import axios from 'axios'
 
 export function request(config, success, failure) {
   //创建axios实例
-  const instance = axios.create({
+  const get = axios.create({
     baseURL: 'http://10.0.2.148:8080/api/monitor',
     timeout: 5000
   })
@@ -24,7 +24,7 @@ export function request(config, success, failure) {
   // })
 
   // 发送真正网络请求
-  return instance(config)
+  return get(config)
 }
 
 export function instance2() {
