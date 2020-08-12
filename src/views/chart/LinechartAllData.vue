@@ -12,13 +12,11 @@ export default {
   data() {
     return {
       store: this.$store,
-      time:['2020-08-12','2020-08-13','2020-08-14'],
-      data:[56,75,42],
-
     };
   },
   mounted() {
     this.drawChart(this.store, this.param);
+    // console.log(this.$store.state.updateTime)
   },
   destroyed() {
     window.onresize = null;
@@ -26,8 +24,9 @@ export default {
   methods: {
     drawChart(store, param) {
       let myChart = echarts.init(this.$refs.charts);
-      let time = this.time
-      let data = this.data
+      let time = this.$store.state.updateTime
+      let data = this.$store.state[param]
+
       let option = {
         title: {
           text: param + "历史状态数据",
@@ -82,25 +81,19 @@ export default {
 
       myChart.setOption(option);
 
-      // setInterval(function () {
-      //   time.push(store.state.cacheData[0].updateTime);
-      //   data.push(store.state.cacheData[0][param]);
-      //   if (time.length > 60) {
-      //     time.shift();
-      //     data.shift();
-      //   }
-      //   myChart.setOption({
-      //     xAxis: {
-      //       data: time,
-      //     },
-      //     series: [
-      //       {
-      //         type: "line",
-      //         data: data,
-      //       },
-      //     ],
-      //   });
-      // }, 5000);
+      setInterval(function () {
+        myChart.setOption({
+          xAxis: {
+            data: store.state.updateTime,
+          },
+          series: [
+            {
+              type: "line",
+              data: store.state[param],
+            },
+          ],
+        });
+      }, 1000);
 
       window.addEventListener("resize", function () {
         myChart.resize();

@@ -5,7 +5,13 @@ export default{
     getType(state,playload){
         state.type = playload
     },
-    initAllData(state,param,playload){
-        state[param]=playload
+    initAllData(state,playload){
+        state.cpu= playload
+    },
+    initAllDatas(state,playload){
+        // console.log(state[playload.param])
+        state[playload.param]= playload.val
+        
+        console.log(state[playload.param])
     }
 }

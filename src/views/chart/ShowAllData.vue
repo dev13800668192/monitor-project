@@ -32,7 +32,7 @@ import LinechartAllData from "./LinechartAllData";
 
 import axios from 'axios'
 axios.defaults.headers.post['Content-Type'] = 'Content-Type:application/x-www-form-urlencoded; charset=UTF-8'
-var params =new URLSearchParams();
+
 
 export default {
   components: {
@@ -46,20 +46,42 @@ export default {
     };
   },
   mounted() {
-    this.getAllData(this.store);
+    this.getAllData(this.store,this.params);
+    // console.log(this.store.state.cpu)
 
     // console.log(this)
   },
   methods: {
-    getAllData(store) {
+    getAllData(store,params) {
       setInterval(function () {
         
         axios.post('http://10.0.2.148:8087/api/monitor/client/AllData',params).then((res) => {
-          let datas = res[0];
-          store.commit("initAllData", cpu,datas.cpu);
-          console.log(store.state.cpu)
+          let datas = res.data[0];
+          console.log(datas)
+          for(var i=0;i<params.length;i++){
+            const playload={
+            param:params[i],
+            val:datas[params[i]]
+          }
+          store.commit("initAllDatas",playload)
+          }
+
+           const playload={
+            param:'updateTime',
+            val:datas['updateTime']
+          }
+          store.commit("initAllDatas",playload)
+
+
+          
+          // store.commit("initAllData",datas.cpu);
+          
+          // console.log(store.state.cpu)
+          // console.log(datas.get(0).get(cpu))
+
+        
         });
-      }, 10000);
+      }, 3000);
     },
   },
 };
