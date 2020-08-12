@@ -4,22 +4,20 @@
       <div class="home">
         <!-- 仪表盘 and 趋势图 -->
         <el-row :gutter="20" type="flex" justify="center">
-          <!-- 仪表盘 -->
-          <el-col :lg="7">
-            <div class="main-center">
-              <dashboard v-bind:param="param"></dashboard>
-            </div>
+          <!-- 趋势图 -->
+          <el-col :lg="20">
+            <LinechartAllData v-bind:param="param"></LinechartAllData>
           </el-col>
 
-          <!-- 趋势图 -->
-          <el-col :lg="17">
-            <linechart v-bind:param="param"></linechart>
+          <el-col :lg="4">
+
           </el-col>
         </el-row>
       </div>
     </div>
   </div>
 </template>
+
 <script>
 // 数字滚动插件
 import countTo from "vue-count-to";
@@ -28,14 +26,18 @@ import echarts from "echarts";
 
 import dashboard from "./Dashboard";
 
-import linechart from "./Linechart";
+import LinechartAllData from "./LinechartAllData";
 
-import { request } from "../../network/request";
+// import { post } from "../../network/request";
+
+import axios from 'axios'
+axios.defaults.headers.post['Content-Type'] = 'Content-Type:application/x-www-form-urlencoded; charset=UTF-8'
+var params =new URLSearchParams();
+
 export default {
   components: {
     countTo,
-    dashboard,
-    linechart,
+    LinechartAllData,
   },
   data() {
     return {
@@ -44,21 +46,20 @@ export default {
     };
   },
   mounted() {
-    this.getcacheData(this.store);
+    this.getAllData(this.store);
 
     // console.log(this)
   },
   methods: {
-    getcacheData(store) {
+    getAllData(store) {
       setInterval(function () {
-        request({
-          url: "/client/cacheData",
-          methods: "get",
-        }).then((res) => {
-          let datas = res.data;
-          store.commit("initCacheData", datas);
+        
+        axios.post('http://10.0.2.148:8087/api/monitor/client/AllData',params).then((res) => {
+          let datas = res[0];
+          store.commit("initAllData", cpu,datas.cpu);
+          console.log(store.state.cpu)
         });
-      }, 5000);
+      }, 10000);
     },
   },
 };
@@ -257,3 +258,4 @@ export default {
   width: 150px;
 }
 </style>
+

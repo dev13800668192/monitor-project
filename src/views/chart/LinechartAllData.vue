@@ -12,6 +12,9 @@ export default {
   data() {
     return {
       store: this.$store,
+      time:['2020-08-12','2020-08-13','2020-08-14'],
+      data:[56,75,42],
+
     };
   },
   mounted() {
@@ -23,18 +26,11 @@ export default {
   methods: {
     drawChart(store, param) {
       let myChart = echarts.init(this.$refs.charts);
-      let time = [
-        this.$store.state.cacheData[this.$store.state.cacheData.length - 1]
-          .updateTime,
-      ];
-      let data = [
-        this.$store.state.cacheData[this.$store.state.cacheData.length - 1][
-          param
-        ],
-      ];
+      let time = this.time
+      let data = this.data
       let option = {
         title: {
-          text: param + "近5分钟运行状态",
+          text: param + "历史状态数据",
           x: "center",
           textStyle: {
             fontSize: 16,
@@ -86,25 +82,25 @@ export default {
 
       myChart.setOption(option);
 
-      setInterval(function () {
-        time.push(store.state.cacheData[0].updateTime);
-        data.push(store.state.cacheData[0][param]);
-        if (time.length > 60) {
-          time.shift();
-          data.shift();
-        }
-        myChart.setOption({
-          xAxis: {
-            data: time,
-          },
-          series: [
-            {
-              type: "line",
-              data: data,
-            },
-          ],
-        });
-      }, 5000);
+      // setInterval(function () {
+      //   time.push(store.state.cacheData[0].updateTime);
+      //   data.push(store.state.cacheData[0][param]);
+      //   if (time.length > 60) {
+      //     time.shift();
+      //     data.shift();
+      //   }
+      //   myChart.setOption({
+      //     xAxis: {
+      //       data: time,
+      //     },
+      //     series: [
+      //       {
+      //         type: "line",
+      //         data: data,
+      //       },
+      //     ],
+      //   });
+      // }, 5000);
 
       window.addEventListener("resize", function () {
         myChart.resize();

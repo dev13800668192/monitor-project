@@ -1,5 +1,12 @@
 const state = {
-  cacheData:[6],
-  allData:[]
+  cacheData:[],
+  cpu:[],
+  gpu:[],
+  memory:[],
+  fps:[],
+  hardDisk:[],
+  io:[],
+  updateTime:[],
+  type:'/client'
 }
 export default state //导出
