@@ -9,6 +9,7 @@ const getComponent = (name, component) => () => import(`@/views/${name}/${compon
 const getComponentChild = (component) => () => import(`@/views/layout/components/${component}.vue`)
 const getComponentCharts =(component) =>()=>import(`@/views/chart/${component}.vue`)
 
+
 const myRouter = new Router({
   routes: [
 
@@ -24,13 +25,13 @@ const myRouter = new Router({
           // component: getComponentCharts('ShowCacheData'),
           children:[{
             path:'',
-            redirect:'/client/cacheData'
+            redirect:store.state.path
           },{
             path:'/client/cacheData',
             component: getComponentCharts('ShowCacheData'),
             meta: {
               title: '实时数据'
-            }
+            },
           },
           {
             path:'/client/allData',

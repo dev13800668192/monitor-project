@@ -84,7 +84,7 @@ export default {
         ],
       };
 
-      myChart.setOption(option);
+      
 
       setInterval(function () {
         time.push(store.state.cacheData[0].updateTime);
@@ -106,6 +106,7 @@ export default {
         });
       }, 5000);
 
+      myChart.setOption(option);
       window.addEventListener("resize", function () {
         myChart.resize();
       });

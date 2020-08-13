@@ -40,7 +40,6 @@
     },
     computed: {
       onRoutes() {
-        console.log(this.$store.state.type)
         return this.$route.path.replace("#/", "");
       },
       ...mapState(["isCollapse"]), //从vuex里面获取菜单是否折叠

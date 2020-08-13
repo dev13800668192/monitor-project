@@ -112,6 +112,7 @@
 
   .header-left {
     float: left;
+    align-content: center;
   }
 
   .header-right {

@@ -16,7 +16,6 @@ export default {
   },
   mounted() {
     this.drawChart(this.store, this.param);
-    // console.log(this.$store.state.updateTime)
   },
   destroyed() {
     window.onresize = null;
@@ -36,6 +35,7 @@ export default {
           },
         },
         legend: {
+          
           data: [param + "占用率"],
         },
         tooltip: {

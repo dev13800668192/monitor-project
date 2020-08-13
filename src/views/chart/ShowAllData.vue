@@ -28,13 +28,13 @@ import dashboard from "./Dashboard";
 
 import LinechartAllData from "./LinechartAllData";
 
-// import { post } from "../../network/request";
 
 import axios from 'axios'
 axios.defaults.headers.post['Content-Type'] = 'Content-Type:application/x-www-form-urlencoded; charset=UTF-8'
 
 
 export default {
+  name:'showalldata',
   components: {
     countTo,
     LinechartAllData,
@@ -45,44 +45,37 @@ export default {
       params: ["cpu", "gpu", "memory", "fps", "hardDisk", "io"],
     };
   },
-  mounted() {
-    this.getAllData(this.store,this.params);
-    // console.log(this.store.state.cpu)
-
-    // console.log(this)
+  destroyed() {
+    console.log("allData destiry")
   },
+  mounted() {
+    // this.getAllData(this.store,this.params);
+  },
+  beforeRouteLeave (to, from, next) {
+    this.$store.commit("changePath",from.path)
+    next();
+    // ...
+  } ,
   methods: {
-    getAllData(store,params) {
-      setInterval(function () {
-        
-        axios.post('http://10.0.2.148:8087/api/monitor/client/AllData',params).then((res) => {
-          let datas = res.data[0];
-          console.log(datas)
-          for(var i=0;i<params.length;i++){
-            const playload={
-            param:params[i],
-            val:datas[params[i]]
-          }
-          store.commit("initAllDatas",playload)
-          }
+    // getAllData(store,params) {
+    //     axios.post('http://10.0.2.148:8087/api/monitor/client/AllData').then((res) => {
+    //       let datas = res.data[0];
+    //       console.log(datas)
+    //       for(var i=0;i<params.length;i++){
+    //         const playload={
+    //         param:params[i],
+    //         val:datas[params[i]]
+    //       }
+    //       store.commit("initAllDatas",playload)
+    //       }
 
-           const playload={
-            param:'updateTime',
-            val:datas['updateTime']
-          }
-          store.commit("initAllDatas",playload)
-
-
-          
-          // store.commit("initAllData",datas.cpu);
-          
-          // console.log(store.state.cpu)
-          // console.log(datas.get(0).get(cpu))
-
-        
-        });
-      }, 3000);
-    },
+    //        const playload={
+    //         param:'updateTime',
+    //         val:datas['updateTime']
+    //       }
+    //       store.commit("initAllDatas",playload)
+    //     });
+    // },
   },
 };
 </script>

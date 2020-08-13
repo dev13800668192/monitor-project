@@ -2,14 +2,11 @@
   <div class="breadcrumb">
     <el-dropdown>
       <span class="el-dropdown-link">
-        {{}}<i class="el-icon-arrow-down el-icon--right"></i>
+        客户端ip: {{ip}} <i class="el-icon-arrow-down el-icon--right"></i>
       </span>
-      <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item>黄金糕</el-dropdown-item>
-        <el-dropdown-item>狮子头</el-dropdown-item>
-        <el-dropdown-item>螺蛳粉</el-dropdown-item>
-        <el-dropdown-item disabled>双皮奶</el-dropdown-item>
-        <el-dropdown-item divided>蚵仔煎</el-dropdown-item>
+      <el-dropdown-menu slot="dropdown" >
+        <el-dropdown-item v-for="(item, index) in devices" :key="index" @click.native="changeIp(item.ip)">{{item.ip}}</el-dropdown-item>
+    
       </el-dropdown-menu>
     </el-dropdown>
   </div>
@@ -18,9 +15,21 @@
 export default {
   data() {
     return {
-      
+      devices:this.$store.state.devices,
+      ip:this.$store.state.ip
     };
-  }
+  },
+  methods: {
+    changeIp(param){
+      this.ip = param;
+      const playload = {
+            param: 'ip' ,
+            val: param,
+          };
+      this.$store.commit("initAllDatas",playload)
+      console.log(this.$store.state.ip)
+    }
+  },
 };
 </script>
 <style lang="scss" scoped>

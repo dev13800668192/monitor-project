@@ -45,8 +45,12 @@ export default {
   },
   mounted() {
     this.getcacheData(this.store);
-
-    // console.log(this)
+  },
+  beforeRouteLeave (to, from, next) {
+    this.$store.commit("changePath",from.path)
+    console.log(this.store.state.path)
+    next();
+    // ...
   },
   methods: {
     getcacheData(store) {
@@ -54,6 +58,9 @@ export default {
         request({
           url: "/client/cacheData",
           methods: "get",
+          params:{
+            ip:store.state.ip
+          }
         }).then((res) => {
           let datas = res.data;
           store.commit("initCacheData", datas);

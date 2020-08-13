@@ -11,7 +11,9 @@ export default{
     initAllDatas(state,playload){
         // console.log(state[playload.param])
         state[playload.param]= playload.val
-        
-        console.log(state[playload.param])
+    },
+    changePath(state,playload){
+        state.path = playload
+        console.log(state.path)
     }
 }
