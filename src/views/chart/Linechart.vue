@@ -57,7 +57,7 @@ export default {
       };
 
       setInterval(function () {
-          axios.get('http://10.0.2.148:8080/api/monitor/client/cacheData',).then(res=>{
+          axios.get('http://10.0.2.148:8080/api/monitor/client/cacheData').then(res=>{
             time.push(res.data[0].updateTime);
             data.push(res.data[0].cpu);
             console.log(time);
