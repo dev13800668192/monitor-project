@@ -6,18 +6,15 @@
   </div>
 </template>
 <script>
-
 export default {
   name: "client",
-  components: {
-  },
+  components: {},
   data() {
     return {
       cacheData: [],
     };
-  },methods: {
-  }
-  
+  },
+  methods: {},
 };
 </script>
 

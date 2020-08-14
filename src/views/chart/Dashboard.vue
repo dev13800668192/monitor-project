@@ -22,7 +22,6 @@ export default {
       let cpu = this.$store.state.cacheData[
         this.$store.state.cacheData.length - 1
       ][param];
-      console.log(cpu);
       let myChart = echarts.init(this.$refs.dashboard);
       let option = {
         tooltip: {

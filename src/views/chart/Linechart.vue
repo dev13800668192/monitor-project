@@ -12,6 +12,7 @@ export default {
   data() {
     return {
       store: this.$store,
+      data:this.$store.state.cacheData
     };
   },
   mounted() {
@@ -60,7 +61,7 @@ export default {
           max: 100, //设置最大值
           min: 0, //设置最小值
           interval: 20, //设置刻度间距
-          name:'%',
+          name: "%",
           splitLine: {
             show: true,
           },
@@ -84,14 +85,16 @@ export default {
         ],
       };
 
-      
+      myChart.setOption(option);
 
       setInterval(function () {
+        if (time[0] == null) {
+          time.shift();
+          data.shift();
+        }
         time.push(store.state.cacheData[0].updateTime);
         data.push(store.state.cacheData[0][param]);
         if (time.length > 60) {
-          time.shift();
-          data.shift();
         }
         myChart.setOption({
           xAxis: {
@@ -106,7 +109,6 @@ export default {
         });
       }, 5000);
 
-      myChart.setOption(option);
       window.addEventListener("resize", function () {
         myChart.resize();
       });

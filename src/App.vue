@@ -1,13 +1,13 @@
 <template>
   <div id="app">
     <router-view></router-view>
-    <div>{{$store.state.cacheData}}</div>
   </div>
 </template>
 
 <script>
 import { request } from "./network/request";
 import axios from "axios";
+// import qs from "qs"
 axios.defaults.headers.post["Content-Type"] =
   "Content-Type:application/x-www-form-urlencoded; charset=UTF-8";
 
@@ -20,43 +20,46 @@ export default {
   },
   components: {},
   mounted() {
-    this.initData(this.$store);
-    this.initDeviceList();
-    this.getAllData(this.store);
+    this.init(this.$store);
+    // this.getAllData(this.$store);
+  },
+  created() {
+    this.initDeviceList(this.$store);
   },
   methods: {
-    getAllData(store) {
-      setInterval(function () {
-        this.initData(store);
-      }, 50000);
+   
+
+    init(store) {
+      setTimeout(function () {
+        let param = new URLSearchParams();
+        param.append("ip", store.state.ip);
+        axios
+          .post("http://10.0.2.148:8080/api/monitor/client/AllData", param)
+          .then((res) => {
+            console.log(res);
+            let datas = res.data[0];
+            let param = [
+              "cpu",
+              "gpu",
+              "memory",
+              "fps",
+              "hardDisk",
+              "io",
+              "updateTime",
+            ];
+            for (var i = 0; i < param.length; i++) {
+              const playload = {
+                param: param[i],
+                val: datas[param[i]],
+              };
+              store.commit("initAllDatas", playload);
+            }
+            console.log(datas);
+          });
+      }, 500);
     },
-    initData(store) {
-      axios
-        .post("http://10.0.2.148:8087/api/monitor/client/AllData", {
-          ip: store.state.ip,
-        })
-        .then((res) => {
-          console.log(res);
-          let datas = res.data[0];
-          let param = [
-            "cpu",
-            "gpu",
-            "memory",
-            "fps",
-            "hardDisk",
-            "io",
-            "updateTime",
-          ];
-          for (var i = 0; i < param.length; i++) {
-            const playload = {
-              param: param[i],
-              val: datas[param[i]],
-            };
-            store.commit("initAllDatas", playload);
-          }
-        });
-    },
-    initDeviceList() {
+
+    initDeviceList(store) {
       // 请求设备列表
       request({
         url: "/devices/getDevice",
@@ -65,7 +68,7 @@ export default {
           param: "devices",
           val: res.data,
         };
-        this.$store.commit("initAllDatas", playload);
+        store.commit("initAllDatas", playload);
 
         for (let i = 0; i < res.data.length; i++) {
           if (res.data[i].state == 1) {
@@ -73,7 +76,7 @@ export default {
               param: "ip",
               val: res.data[i].ip,
             };
-            this.$store.commit("initAllDatas", ip);
+            store.commit("initAllDatas", ip);
             break;
           }
         }

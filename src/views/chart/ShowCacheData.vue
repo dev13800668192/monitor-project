@@ -44,6 +44,16 @@ export default {
     };
   },
   mounted() {
+    request({
+          url: "/client/cacheData",
+          methods: "get",
+          params:{
+            ip:this.$store.state.ip
+          }
+        }).then((res) => {
+          let datas = res.data;
+          this.$store.commit("initCacheData", datas);
+        });
     this.getcacheData(this.store);
   },
   beforeRouteLeave (to, from, next) {

@@ -5,6 +5,9 @@
 <script>
 import echarts from "echarts";
 import { request } from "../../network/request";
+import axios from "axios";
+axios.defaults.headers.post["Content-Type"] =
+  "Content-Type:application/x-www-form-urlencoded; charset=UTF-8";
 export default {
   props: {
     param: String,
@@ -15,6 +18,7 @@ export default {
     };
   },
   mounted() {
+    // this.getAllData(this.$store);
     this.drawChart(this.store, this.param);
   },
   destroyed() {
@@ -35,7 +39,7 @@ export default {
           },
         },
         legend: {
-          
+
           data: [param + "占用率"],
         },
         tooltip: {
@@ -93,12 +97,39 @@ export default {
             },
           ],
         });
-      }, 1000);
+      },5000);
 
       window.addEventListener("resize", function () {
         myChart.resize();
       });
     },
+     getAllData(store) {
+        let param = new URLSearchParams();
+        param.append("ip", store.state.ip);
+        axios
+          .post("http://10.0.2.148:8087/api/monitor/client/AllData", param)
+          .then((res) => {
+            console.log(res);
+            let datas = res.data[0];
+            let param = [
+              "cpu",
+              "gpu",
+              "memory",
+              "fps",
+              "hardDisk",
+              "io",
+              "updateTime",
+            ];
+            for (var i = 0; i < param.length; i++) {
+              const playload = {
+                param: param[i],
+                val: datas[param[i]],
+              };
+              store.commit("initAllDatas", playload);
+            }
+          });
+    },
+
     toDo(item, i) {
       this.$set(this.todulist[i], "checked", item.checked ? false : true);
     },

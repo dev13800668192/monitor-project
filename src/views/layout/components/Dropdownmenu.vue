@@ -2,10 +2,12 @@
   <div class="breadcrumb">
     <el-dropdown>
       <span class="el-dropdown-link">
-        客户端ip: {{ip}} <i class="el-icon-arrow-down el-icon--right"></i>
+        客户端IP: {{ip}} <i class="el-icon-arrow-down el-icon--right"></i>
       </span>
       <el-dropdown-menu slot="dropdown" >
-        <el-dropdown-item v-for="(item, index) in devices" :key="index" @click.native="changeIp(item.ip)">{{item.ip}}</el-dropdown-item>
+        <el-dropdown-item v-for="(item, index) in devices" v-bind:disabled="item.state=='1'?false:true" :key="index" @click.native="changeIp(item.ip)" >
+        <i :class="item.state=='1'?'el-icon-circle-check':'el-icon-circle-close'"></i> {{item.ip}} 
+        </el-dropdown-item>
     
       </el-dropdown-menu>
     </el-dropdown>

@@ -1,7 +1,7 @@
 <template>
   <div class="aside">
     <el-scrollbar wrap-class="scrollbar-wrapper">
-      <el-menu :default-active="onRoutes" class="el-menu-vertical-demo" 
+      <el-menu :default-active="onRoutes" class="el-menu-vertical-demo " 
         :collapse="isCollapse"  active-text-color="#bdb7ff" router>
         <template v-for="item in items">
             <el-menu-item :index="item.index" :key="item.index" @click="getType(item.index)">
@@ -27,11 +27,11 @@
           index: "/client",
           title: "客户端性能监控"
         },
-        {
-          icon: "el-icon-news",
-          index: "/serve",
-          title: "服务器性能监控"
-        }
+        // {
+        //   icon: "el-icon-news",
+        //   index: "/serve",
+        //   title: "服务器性能监控"
+        // }
         ]
       };
     },
