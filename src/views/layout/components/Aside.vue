@@ -1,34 +1,13 @@
 <template>
   <div class="aside">
     <el-scrollbar wrap-class="scrollbar-wrapper">
-      <el-menu :default-active="onRoutes" class="el-menu-vertical-demo" 
+      <el-menu :default-active="onRoutes" class="el-menu-vertical-demo " 
         :collapse="isCollapse"  active-text-color="#bdb7ff" router>
         <template v-for="item in items">
-          <template v-if="item.subs">
-            <el-submenu :index="item.index" :key="item.index">
-              <template slot="title">
-                <i :class="item.icon"></i>
-                <span slot="title">{{ item.title }}</span>
-              </template>
-              <template v-for="subItem in item.subs">
-                <el-submenu v-if="subItem.subs" :index="subItem.index" :key="subItem.index">
-                  <template slot="title">{{ subItem.title }}</template>
-                  <el-menu-item
-                    v-for="(threeItem,i) in subItem.subs"
-                    :key="i"
-                    :index="threeItem.index"
-                  >{{ threeItem.title }}</el-menu-item>
-                </el-submenu>
-                <el-menu-item v-else :index="subItem.index" :key="subItem.index">{{ subItem.title }}</el-menu-item>
-              </template>
-            </el-submenu>
-          </template>
-          <template v-else>
-            <el-menu-item :index="item.index" :key="item.index">
+            <el-menu-item :index="item.index" :key="item.index" @click="getType(item.index)">
               <i :class="item.icon"></i>
               <span slot="title">{{ item.title }}</span>
             </el-menu-item>
-          </template>
         </template>
       </el-menu>
     </el-scrollbar>
@@ -45,14 +24,14 @@
         items:[
         {
           icon: "el-icon-news",
-          index: "client",
+          index: "/client",
           title: "客户端性能监控"
         },
-        {
-          icon: "el-icon-news",
-          index: "serve",
-          title: "服务器性能监控"
-        }
+        // {
+        //   icon: "el-icon-news",
+        //   index: "/serve",
+        //   title: "服务器性能监控"
+        // }
         ]
       };
     },
@@ -61,12 +40,15 @@
     },
     computed: {
       onRoutes() {
-        return this.$route.path.replace("/", "");
+        return this.$route.path.replace("#/", "");
       },
       ...mapState(["isCollapse"]), //从vuex里面获取菜单是否折叠
     },
     methods: {
-
+      getType(param){
+        this.$store.commit('getType',param);
+        console.log(this.$store.state.type)
+      }
     }
   };
 

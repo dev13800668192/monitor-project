@@ -24,6 +24,7 @@ new Vue({
 }).$mount('#app')
 
 
+
 // import {request} from './network/request';
 
 // request({

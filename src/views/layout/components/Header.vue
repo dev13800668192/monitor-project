@@ -1,5 +1,5 @@
 <template>
-  <div class="head-container clearfix">
+  <div class="head-container ">
     <div class="header-left">
       <showAside :toggle-click="toggleClick" />
       <dropDownmenu />
@@ -10,8 +10,8 @@
       <div class="header-user-con">
         <!-- button -->
         <el-row style="margin: 10px;">
-          <el-button type="primary" round>实时数据</el-button>
-          <el-button type="primary" round>历史数据</el-button>
+          <el-button type="primary" round @click="toCacheData">实时数据</el-button>
+          <el-button type="primary" round @click="toAllData">历史数据</el-button>
         </el-row>
 
         <!-- 全屏显示 -->
@@ -40,7 +40,7 @@
         fullscreen: false,
         name: "linxin",
         message: 2,
-        username: "zyh"
+        username: "zyh",
       };
     },
     computed: {
@@ -51,17 +51,21 @@
         set: function (newValue) {
           this.$store.commit("IS_COLLAPSE", newValue);
         }
-      }
+      },
+      onRoutes() {
+        return this.$route.path.replace("#/", "");
+      },
     },
     methods: {
       toggleClick() {
         this.isCollapse = !this.isCollapse;
       },
-      // 用户名下拉菜单选择事件
-      logout(command) {
-        this.$store.commit('TAGES_LIST', [])
-        this.$store.commit('SET_BREAD', ['home'])
-        this.$router.push("/login");
+      // 实时数据
+      toCacheData(){
+        this.$router.push(this.$store.state.type+'/cacheData');
+      },
+      toAllData(){
+        this.$router.push(this.$store.state.type+'/allData');
       },
       // 全屏事件
       handleFullScreen() {
@@ -97,6 +101,7 @@
 
 <style lang="scss" scoped>
   .head-container {
+    z-index: 99;
     height: 50px;
     line-height: 50px;
     -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12),
@@ -107,6 +112,7 @@
 
   .header-left {
     float: left;
+    align-content: center;
   }
 
   .header-right {

@@ -1,20 +1,20 @@
 <template>
   <div>
-    <showalldata></showalldata>
+    <keep-alive exclude="showalldata">
+      <router-view></router-view>
+    </keep-alive>
   </div>
 </template>
 <script>
-import showalldata from '../../chart/ShowAllData';
 export default {
   name: "client",
-  components: {
-   showalldata
-  },
-  data () {
+  components: {},
+  data() {
     return {
-      cacheData:[],
+      cacheData: [],
     };
-  }
+  },
+  methods: {},
 };
 </script>
 

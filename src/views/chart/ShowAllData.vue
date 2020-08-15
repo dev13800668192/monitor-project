@@ -1,53 +1,122 @@
 <template>
-  <div class="home">
-    <!-- 仪表盘 and 趋势图 -->
-    <el-row :gutter="20" type="flex" justify="center">
-      <!-- 仪表盘 -->
-      <el-col :lg="7">
-        <div class="main-center">
-          <dashboard></dashboard>
-        </div>
-      </el-col>
+  <div>
+    <div class="top">
+      <el-date-picker
+        v-model="value"
+        type="datetimerange"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        value-format="yyyy-MM-dd HH:mm:ss"
+      ></el-date-picker>
 
-      <!-- 趋势图 -->
-      <el-col :lg="14">
-        <linechart></linechart>
-      </el-col>
-
-      <el-col :lg="3">
-        <newline></newline>
-      </el-col>
-    </el-row>
+      <el-button style="margin-left:10px;" @click="update(store)">查询</el-button>
+    </div>
+    <div v-for="(param, index) in params" :key="index">
+      <div class="home">
+        <el-row :gutter="20" type="flex" justify="center">
+          <!-- 趋势图 -->
+          <el-col :lg="24">
+            <LinechartAllData v-bind:param="param"></LinechartAllData>
+          </el-col>
+        </el-row>
+      </div>
+    </div>
   </div>
 </template>
+
 <script>
 // 数字滚动插件
 import countTo from "vue-count-to";
 //引入echarts 插件
 import echarts from "echarts";
 
-import dashboard from "./Dashboard"
+import dashboard from "./Dashboard";
 
-import linechart from "./Linechart"
+import LinechartAllData from "./LinechartAllData";
 
-import newline from "./NewLine"
+import axios from "axios";
+axios.defaults.headers.post["Content-Type"] =
+  "Content-Type:application/x-www-form-urlencoded; charset=UTF-8";
 
 export default {
+  name: "showalldata",
   components: {
     countTo,
-    dashboard,
-    linechart,
-    newline
+    LinechartAllData,
   },
-  data () {
+  data() {
     return {
-
+      store: this.$store,
+      params: ["cpu", "gpu", "memory", "fps", "hardDisk", "io"],
+      pickerOptions: {
+        shortcuts: [],
+      },
+      value: "",
     };
-  }
-};
+  },
+  destroyed() {
+    console.log("allData destiry");
+  },
+  created() {
+    this.update(this.$store)
+    console.log(this.$store.state.cpu)
+  },
+  mounted() {
+    console.log("fu mouted:"+this.$store.state.cpu)
+    // this.getAllData(this.store,this.params);
+    
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$store.commit("changePath", from.path);
+    next();
+    // ...
+  },
+  methods: {
 
+    update(store) {
+      let param = new URLSearchParams();
+      param.append("ip", store.state.ip);
+      console.log(this.value);
+      if(this.value!=null){
+      param.append("minTime", this.value[0]);
+      param.append("maxTime", this.value[1]);
+      }
+
+      axios
+        .post("http://10.0.2.148:8080/api/monitor/client/AllData", param)
+        .then((res) => {
+          // console.log(res);
+          let datas = res.data[0];
+          let param = [
+            "cpu",
+            "gpu",
+            "memory",
+            "fps",
+            "hardDisk",
+            "io",
+            "updateTime",
+          ];
+          for (var i = 0; i < param.length; i++) {
+            const playload = {
+              param: param[i],
+              val: datas[param[i]],
+            };
+            store.commit("initAllDatas", playload);
+            console.log("111："+store.state.cpu)
+          }
+          // console.log;
+        });
+    },
+  },
+};
 </script>
 <style lang="scss" scoped>
+.top {
+  padding: 0px;
+  margin-right: 40px;
+  float: right;
+}
 .home {
   padding: 40px;
   background: $base-gray1;
@@ -241,3 +310,4 @@ export default {
   width: 150px;
 }
 </style>
+

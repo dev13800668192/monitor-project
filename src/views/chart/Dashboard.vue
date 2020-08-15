@@ -4,41 +4,66 @@
 
 <script>
 import echarts from "echarts";
+import { request } from "../../network/request";
 
 export default {
-  mounted () {
-    this.SetEchart();
+  props: {
+    param: String,
   },
-  destroyed () {
-    window.onresize = null
+  created() {},
+  mounted() {
+    this.SetEchart(this.param,this.$store);
+  },
+  beforeDestroy() {
+    let dcharts = echarts.getInstanceByDom(this.$refs.dashboard)
+        if (dcharts) {
+            dcharts.clear();
+            dcharts.dispose();
+        }
+
+  },
+  destroyed() {
+    window.onresize = null;
   },
   methods: {
-    SetEchart () {
-      let cpu = this.$store.state.cacheData[this.$store.state.cacheData.length-1].cpu
+    SetEchart(param,store) {
+      let cpu = this.$store.state.cacheData[
+        this.$store.state.cacheData.length - 1
+      ][param];
       let myChart = echarts.init(this.$refs.dashboard);
       let option = {
         tooltip: {
-          formatter: '{a} <br/>{b} : {c}%'
+          formatter: "{a} <br/>{b} : {c}%",
         },
-        series: [{
-          name: 'CPU',
-          type: 'gauge',
-          radius: "80%",
-          detail: {
-            formatter: '{value}%'
+        series: [
+          {
+            name: "CPU",
+            type: "gauge",
+            radius: "80%",
+            detail: {
+              formatter: "{value}%",
+            },
+            data: [
+              {
+                value: cpu,
+                name: param + "占用率",
+              },
+            ],
           },
-          data: [{
-            value: cpu,
-            name: 'CPU占用率'
-          }]
-        }]
+        ],
       };
+
       myChart.setOption(option);
+      setInterval(function () {
+          option.series[0].data[0].value = store.state.cacheData[store.state.cacheData.length-1][param]
+          myChart.setOption(option);
+      }, 5000);
+
       window.addEventListener("resize", function () {
         myChart.resize();
       });
-    }
-  }
+    },
+  },
 };
 </script>	
 	

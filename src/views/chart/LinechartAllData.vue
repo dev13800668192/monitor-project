@@ -5,18 +5,38 @@
 <script>
 import echarts from "echarts";
 import { request } from "../../network/request";
+import { mapGetters } from 'vuex'
+import axios from "axios";
+axios.defaults.headers.post["Content-Type"] =
+  "Content-Type:application/x-www-form-urlencoded; charset=UTF-8";
 export default {
   props: {
-    param: String,
+    param: String
   },
   data() {
     return {
       store: this.$store,
-      data:this.$store.state.cacheData
     };
   },
   mounted() {
-    this.drawChart(this.store, this.param);
+    // this.getAllData(this.$store)
+    console.log(this.$store.state.cpu)
+      this.drawChart(this.store, this.param)
+  },
+  computed: {
+    
+    updateData() {
+      return this.$store.state.updateTime;
+    }
+  },
+  watch: {
+    updateData(newData, oldData){
+      this.drawChart(this.store, this.param);
+    }
+  },
+  updated() {
+
+    
   },
   beforeDestroy() {
     let dcharts = echarts.getInstanceByDom(this.$refs.charts)
@@ -27,27 +47,24 @@ export default {
 
   },
   destroyed() {
+    console.log("===========================================");
     window.onresize = null;
   },
   methods: {
     drawChart(store, param) {
-      // let myChart = echarts.init(this.$refs.charts);
       let myChart = echarts.getInstanceByDom(this.$refs.charts);
       if (!myChart) {
         myChart = echarts.init(this.$refs.charts, "light");
       }
-      let time = [
-        this.$store.state.cacheData[this.$store.state.cacheData.length - 1]
-          .updateTime,
-      ];
-      let data = [
-        this.$store.state.cacheData[this.$store.state.cacheData.length - 1][
-          param
-        ],
-      ];
+      myChart.clear();
+      let time = store.state.updateTime;
+      let data = store.state[param];
+
+      console.log("============"+time)
+
       let option = {
         title: {
-          text: param + "近5分钟运行状态",
+          text: param + "历史状态数据",
           x: "center",
           textStyle: {
             fontSize: 16,
@@ -96,41 +113,55 @@ export default {
           },
         ],
       };
-
-      
       // myChart.clear();
       myChart.setOption(option);
-
-      let timer=setInterval(function () {
-        // clearInterval(timer) 
-        if (time[0] == null) {
-          time.shift();
-          data.shift();
-        }
-        time.push(store.state.cacheData[0].updateTime);
-        data.push(store.state.cacheData[0][param]);
-        if (time.length > 20) {
-           time.shift();
-          data.shift();
-        }
-        // myChart.clear();
-        myChart.setOption({
-          xAxis: {
-            data: time,
-          },
-          series: [
-            {
-              type: "line",
-              data: data,
-            },
-          ],
-        });
-      }, 5000);
+      // let timer = setInterval(function () {
+      //   clearInterval(timer);
+      //   // myChart.clear();
+      //   myChart.setOption({
+      //     xAxis: {
+      //       data: store.state.updateTime,
+      //     },
+      //     series: [
+      //       {
+      //         type: "line",
+      //         data: store.state[param],
+      //       },
+      //     ],
+      //   });
+      // }, 5000000);
 
       window.addEventListener("resize", function () {
         myChart.resize();
       });
     },
+    getAllData(store) {
+      let param = new URLSearchParams();
+      param.append("ip", store.state.ip);
+      axios
+        .post("http://10.0.2.148:8087/api/monitor/client/AllData", param)
+        .then((res) => {
+          console.log(res);
+          let datas = res.data[0];
+          let param = [
+            "cpu",
+            "gpu",
+            "memory",
+            "fps",
+            "hardDisk",
+            "io",
+            "updateTime",
+          ];
+          for (var i = 0; i < param.length; i++) {
+            const playload = {
+              param: param[i],
+              val: datas[param[i]],
+            };
+            store.commit("initAllDatas", playload);
+          }
+        });
+    },
+
     toDo(item, i) {
       this.$set(this.todulist[i], "checked", item.checked ? false : true);
     },
