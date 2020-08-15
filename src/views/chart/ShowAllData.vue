@@ -58,9 +58,14 @@ export default {
   destroyed() {
     console.log("allData destiry");
   },
-  mounted() {
-    // this.getAllData(this.store,this.params);
+  created() {
     this.update(this.$store)
+    console.log(this.$store.state.cpu)
+  },
+  mounted() {
+    console.log("fu mouted:"+this.$store.state.cpu)
+    // this.getAllData(this.store,this.params);
+    
   },
   beforeRouteLeave(to, from, next) {
     this.$store.commit("changePath", from.path);
@@ -98,8 +103,9 @@ export default {
               val: datas[param[i]],
             };
             store.commit("initAllDatas", playload);
+            console.log("111："+store.state.cpu)
           }
-          console.log(datas);
+          // console.log;
         });
     },
   },

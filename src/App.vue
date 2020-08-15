@@ -20,7 +20,7 @@ export default {
   },
   components: {},
   mounted() {
-    this.init(this.$store);
+    // this.init(this.$store);
     // this.getAllData(this.$store);
   },
   created() {

@@ -56,15 +56,10 @@ export default {
         });
     this.getcacheData(this.store);
   },
-  beforeRouteLeave (to, from, next) {
-    this.$store.commit("changePath",from.path)
-    console.log(this.store.state.path)
-    next();
-    // ...
-  },
   methods: {
     getcacheData(store) {
-      setInterval(function () {
+     let timer= setInterval(function () {
+      //  clearInterval(timer)
         request({
           url: "/client/cacheData",
           methods: "get",

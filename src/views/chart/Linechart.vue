@@ -18,12 +18,24 @@ export default {
   mounted() {
     this.drawChart(this.store, this.param);
   },
+  beforeDestroy() {
+    let dcharts = echarts.getInstanceByDom(this.$refs.charts)
+        if (dcharts) {
+            dcharts.clear();
+            dcharts.dispose();
+        }
+
+  },
   destroyed() {
     window.onresize = null;
   },
   methods: {
     drawChart(store, param) {
-      let myChart = echarts.init(this.$refs.charts);
+      // let myChart = echarts.init(this.$refs.charts);
+      let myChart = echarts.getInstanceByDom(this.$refs.charts);
+      if (!myChart) {
+        myChart = echarts.init(this.$refs.charts, "light");
+      }
       let time = [
         this.$store.state.cacheData[this.$store.state.cacheData.length - 1]
           .updateTime,
@@ -85,17 +97,23 @@ export default {
         ],
       };
 
+      
+      // myChart.clear();
       myChart.setOption(option);
 
-      setInterval(function () {
+      let timer=setInterval(function () {
+        // clearInterval(timer) 
         if (time[0] == null) {
           time.shift();
           data.shift();
         }
         time.push(store.state.cacheData[0].updateTime);
         data.push(store.state.cacheData[0][param]);
-        if (time.length > 60) {
+        if (time.length > 20) {
+           time.shift();
+          data.shift();
         }
+        // myChart.clear();
         myChart.setOption({
           xAxis: {
             data: time,

@@ -14,6 +14,14 @@ export default {
   mounted() {
     this.SetEchart(this.param,this.$store);
   },
+  beforeDestroy() {
+    let dcharts = echarts.getInstanceByDom(this.$refs.dashboard)
+        if (dcharts) {
+            dcharts.clear();
+            dcharts.dispose();
+        }
+
+  },
   destroyed() {
     window.onresize = null;
   },
