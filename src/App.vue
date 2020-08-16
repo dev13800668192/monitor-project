@@ -13,28 +13,26 @@ axios.defaults.headers.post["Content-Type"] =
 
 export default {
   name: "app",
-  data() {
+  data () {
     return {
       store: this.$store,
     };
   },
   components: {},
-  mounted() {
-    // this.init(this.$store);
-    // this.getAllData(this.$store);
+  mounted () {
   },
-  created() {
+  created () {
     this.initDeviceList(this.$store);
   },
   methods: {
-   
 
-    init(store) {
+
+    init (store) {
       setTimeout(function () {
         let param = new URLSearchParams();
         param.append("ip", store.state.ip);
         axios
-          .post("http://10.0.2.148:8080/api/monitor/client/AllData", param)
+          .post("http://localhost:8080/api/monitor/client/AllData", param)
           .then((res) => {
             console.log(res);
             let datas = res.data[0];
@@ -59,7 +57,7 @@ export default {
       }, 500);
     },
 
-    initDeviceList(store) {
+    initDeviceList (store) {
       // 请求设备列表
       request({
         url: "/devices/getDevice",

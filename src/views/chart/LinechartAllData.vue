@@ -19,7 +19,6 @@ export default {
     };
   },
   mounted() {
-    // this.getAllData(this.$store)
     console.log(this.$store.state.cpu)
       this.drawChart(this.store, this.param)
   },
@@ -134,32 +133,6 @@ export default {
       window.addEventListener("resize", function () {
         myChart.resize();
       });
-    },
-    getAllData(store) {
-      let param = new URLSearchParams();
-      param.append("ip", store.state.ip);
-      axios
-        .post("http://10.0.2.148:8087/api/monitor/client/AllData", param)
-        .then((res) => {
-          console.log(res);
-          let datas = res.data[0];
-          let param = [
-            "cpu",
-            "gpu",
-            "memory",
-            "fps",
-            "hardDisk",
-            "io",
-            "updateTime",
-          ];
-          for (var i = 0; i < param.length; i++) {
-            const playload = {
-              param: param[i],
-              val: datas[param[i]],
-            };
-            store.commit("initAllDatas", playload);
-          }
-        });
     },
 
     toDo(item, i) {

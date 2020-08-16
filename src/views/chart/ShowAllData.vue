@@ -9,7 +9,6 @@
         end-placeholder="结束日期"
         value-format="yyyy-MM-dd HH:mm:ss"
       ></el-date-picker>
-
       <el-button style="margin-left:10px;" @click="update(store)">查询</el-button>
     </div>
     <div v-for="(param, index) in params" :key="index">
@@ -45,7 +44,7 @@ export default {
     countTo,
     LinechartAllData,
   },
-  data() {
+  data () {
     return {
       store: this.$store,
       params: ["cpu", "gpu", "memory", "fps", "hardDisk", "io"],
@@ -55,36 +54,36 @@ export default {
       value: "",
     };
   },
-  destroyed() {
+  destroyed () {
     console.log("allData destiry");
   },
-  created() {
+  created () {
     this.update(this.$store)
     console.log(this.$store.state.cpu)
   },
-  mounted() {
-    console.log("fu mouted:"+this.$store.state.cpu)
+  mounted () {
+    console.log("fu mouted:" + this.$store.state.cpu)
     // this.getAllData(this.store,this.params);
-    
+
   },
-  beforeRouteLeave(to, from, next) {
+  beforeRouteLeave (to, from, next) {
     this.$store.commit("changePath", from.path);
     next();
     // ...
   },
   methods: {
 
-    update(store) {
+    update (store) {
       let param = new URLSearchParams();
       param.append("ip", store.state.ip);
       console.log(this.value);
-      if(this.value!=null){
-      param.append("minTime", this.value[0]);
-      param.append("maxTime", this.value[1]);
+      if (this.value != null) {
+        param.append("minTime", this.value[0]);
+        param.append("maxTime", this.value[1]);
       }
 
       axios
-        .post("http://10.0.2.148:8080/api/monitor/client/AllData", param)
+        .post("http://localhost:8080/api/monitor/client/AllData", param)
         .then((res) => {
           // console.log(res);
           let datas = res.data[0];
@@ -103,7 +102,7 @@ export default {
               val: datas[param[i]],
             };
             store.commit("initAllDatas", playload);
-            console.log("111："+store.state.cpu)
+            console.log("111：" + store.state.cpu)
           }
           // console.log;
         });
@@ -115,7 +114,11 @@ export default {
 .top {
   padding: 0px;
   margin-right: 40px;
+  right: 0;
+  position: absolute;
   float: right;
+  z-index: 99999;
+  text-align: right;
 }
 .home {
   padding: 40px;
